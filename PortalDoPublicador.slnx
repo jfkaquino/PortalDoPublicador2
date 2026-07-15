@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="PortalDoPublicador.Api/PortalDoPublicador.Api.csproj" />
+  <Project Path="PortalDoPublicador.AppHost/PortalDoPublicador.AppHost.csproj" />
+  <Project Path="PortalDoPublicador.Client/PortalDoPublicador.Client.csproj" />
+  <Project Path="PortalDoPublicador.ServiceDefaults/PortalDoPublicador.ServiceDefaults.csproj" />
+</Solution>
