@@ -3,4 +3,5 @@
   <Project Path="PortalDoPublicador.AppHost/PortalDoPublicador.AppHost.csproj" />
   <Project Path="PortalDoPublicador.Client/PortalDoPublicador.Client.csproj" />
   <Project Path="PortalDoPublicador.ServiceDefaults/PortalDoPublicador.ServiceDefaults.csproj" />
+  <Project Path="PortalDoPublicador.Shared/PortalDoPublicador.Shared.csproj" />
 </Solution>

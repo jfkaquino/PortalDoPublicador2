@@ -1,11 +1,26 @@
-﻿@inherits LayoutComponentBase
+@inherits LayoutComponentBase
 
 <FluentLayout>
 
     <FluentHeader>
+        <FluentButton BackgroundColor="rgba(0, 0, 0, 0)"
+                      OnClick="@(() => menuExpanded = !menuExpanded)"
+                      Style="margin-left: -18px; margin-right: 10px;">
+
+            <FluentIcon Value="@(new Icons.Regular.Size20.LineHorizontal3())"
+                        Color="Color.Fill" />
+        </FluentButton>
+
         Portal do Publicador
 
         <FluentSpacer />
+
+        <FluentButton BackgroundColor="rgba(0, 0, 0, 0)"
+                      Style="margin-left: -18px; margin-right: 10px;">
+
+            <FluentIcon Value="@(new Icons.Regular.Size20.Alert())"
+                        Color="Color.Fill" />
+        </FluentButton>
 
         <FluentProfileMenu Status="@PresenceStatus.Available"
                            HeaderLabel="Microsoft"
@@ -16,7 +31,34 @@
 
     <FluentStack Orientation="Orientation.Horizontal" Width="100%" Style="height: calc(100vh - 50px);">
 
-        <NavMenu />
+        <FluentNavMenu Width="250" @bind-Expanded="menuExpanded" Collapsible="false" Title="Portal do Publicador"
+            >
+
+            <FluentNavLink Href="" Match="NavLinkMatch.All" Icon="@(new Icons.Regular.Size20.Home())">
+                Início
+            </FluentNavLink>
+
+            <FluentNavLink Href="contador" Icon="@(new Icons.Regular.Size20.Calendar())">
+                Programações
+            </FluentNavLink>
+            
+            <FluentNavLink Href="publicadores/novo" Icon="@(new Icons.Regular.Size20.PersonAdd())">
+                Novo Publicador
+            </FluentNavLink>
+
+            <FluentNavLink Href="dados" Icon="@(new Icons.Regular.Size20.PersonAvailable())">
+                Designações
+            </FluentNavLink>
+
+            <FluentNavLink Href="dados" Icon="@(new Icons.Regular.Size20.Map())">
+                Territórios
+            </FluentNavLink>
+
+            <FluentNavLink Href="dados" Icon="@(new Icons.Regular.Size20.Clock())">
+                Relatório
+            </FluentNavLink>
+
+        </FluentNavMenu>
 
         <FluentBodyContent>
             <div style="padding: 24px; width: 100%; overflow-y: auto;">
@@ -26,4 +68,11 @@
 
     </FluentStack>
 
+    <FluentToastProvider />
+    <FluentMessageBarProvider />
+    
 </FluentLayout>
+
+@code {
+    private bool menuExpanded = true;
+}

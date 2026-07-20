@@ -1,5 +1,3 @@
-using Google.Protobuf.WellKnownTypes;
-
 var builder = DistributedApplication.CreateBuilder(args);
 
 var api = builder.AddProject<Projects.PortalDoPublicador_Api>("portaldopublicador-api");

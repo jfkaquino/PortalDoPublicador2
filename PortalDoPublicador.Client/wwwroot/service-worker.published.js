@@ -2,6 +2,7 @@
 // offline support. See https://aka.ms/blazor-offline-considerations
 
 self.importScripts('./service-worker-assets.js');
+self.importScripts('./js/indexedDbQueue.js');
 self.addEventListener('install', event => event.waitUntil(onInstall(event)));
 self.addEventListener('activate', event => event.waitUntil(onActivate(event)));
 self.addEventListener('fetch', event => event.respondWith(onFetch(event)));
@@ -52,4 +53,61 @@ async function onFetch(event) {
     }
 
     return cachedResponse || fetch(event.request);
+}
+
+// Background Sync Event
+self.addEventListener('sync', (event) => {
+    if (event.tag === 'sync-changes') {
+        event.waitUntil(processSyncQueue());
+    }
+});
+
+// Fallback message event
+self.addEventListener('message', (event) => {
+    if (event.data && event.data.type === 'SYNC_NOW') {
+        processSyncQueue();
+    }
+});
+
+async function processSyncQueue() {
+    if (!self.syncQueue) return;
+    
+    try {
+        const changes = await self.syncQueue.getAllChanges();
+        if (changes && changes.length > 0) {
+            const apiBaseUrl = 'http://portaldopublicador-api'; // Or relative depending on hosting
+            // Note: Using the Aspire service discovery name as used in Program.cs
+            const response = await fetch('http://portaldopublicador-api/api/sync', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(changes)
+            });
+            
+            if (response.ok) {
+                await self.syncQueue.clearQueue();
+                console.log('Sync completed successfully.');
+            } else {
+                if (response.status === 409) {
+                    const erroConflito = await response.json();
+                    console.warn("Conflito detectado no servidor", erroConflito);
+                    
+                    const clients = await self.clients.matchAll();
+                    clients.forEach(client => {
+                        client.postMessage({
+                            type: 'CONFLITO_RESOLVIDO_PELO_SERVIDOR',
+                            detalhes: erroConflito
+                        });
+                    });
+                    
+                    // Limpamos a fila para não entrar em loop infinito travando os próximos syncs
+                    await self.syncQueue.clearQueue();
+                }
+                console.error('Sync API returned an error:', response.status);
+            }
+        }
+    } catch (err) {
+        console.error('Error processing sync queue', err);
+    }
 }
