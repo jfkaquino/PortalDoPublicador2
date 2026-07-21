@@ -30,7 +30,7 @@ dbStore.Stores.Add(new StoreSchema { Name = "Configuracoes", PrimaryKey = new In
 builder.Services.AddSingleton(dbStore);
 builder.Services.AddScoped<IIndexedDbFactory, IndexedDbFactory>();
 builder.Services.AddScoped<IndexedDBManager>();
-builder.Services.AddScoped<PortalDoPublicador.Client.Infrastructure.Sync.PullProcessorService>();
+builder.Services.AddScoped<PortalDoPublicador.Client.Infrastructure.Sync.PullProcessor>();
 
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("api"));
 builder.Services.AddFluentUIComponents();
